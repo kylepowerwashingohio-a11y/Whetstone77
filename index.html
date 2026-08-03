@@ -280,11 +280,11 @@
           <div class="pb-1 text-left space-y-1 px-1">
             <div class="bg-navy-900/5 p-1.5 rounded border border-gold-500/30 text-[10px]">
               <span class="font-bold text-navy-900 block font-serif">FRIDAY, JULY 9, 2027</span>
-              <span id="cardFridayText" class="text-navy-800 block truncate font-medium">Casual Get-Together • Ohio Brewing (6:00–9:30 PM)</span>
+              <span id="cardFridayText" class="text-navy-800 block truncate font-medium">Casual Get-Together • Ohio Brewing (6:00–10:00 PM)</span>
             </div>
             <div class="bg-navy-900/5 p-1.5 rounded border border-gold-500/30 text-[10px]">
               <span class="font-bold text-navy-900 block font-serif">SATURDAY, JULY 10, 2027</span>
-              <span id="cardSaturdayText" class="text-navy-800 block truncate font-medium">Saturday Party • Bob Crane Comm. Ctr (6:00–10:00 PM)</span>
+              <span id="cardSaturdayText" class="text-navy-800 block truncate font-medium">Saturday Party • Bob Crane Comm. Ctr (6:30–10:00 PM)</span>
             </div>
           </div>
 
@@ -426,7 +426,7 @@
               </div>
               <h3 class="font-serif text-sm font-bold text-navy-900">Casual Get-Together</h3>
               <p class="text-xs text-navy-800 mt-0.5 font-medium"><i class="fa-solid fa-location-dot text-gold-600 mr-1"></i> Ohio Brewing • 421 E 2nd Ave</p>
-              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 7:30 p.m. – 9:30 p.m.</p>
+              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 6:00 p.m. – 10:00 p.m.</p>
             </div>
 
             <!-- Event 2: Saturday -->
@@ -437,7 +437,7 @@
               </div>
               <h3 class="font-serif text-sm font-bold text-navy-900">Saturday Party</h3>
               <p class="text-xs text-navy-800 mt-0.5 font-medium"><i class="fa-solid fa-location-dot text-gold-600 mr-1"></i> Bob Crane Community Center • 3600 Tremont Rd</p>
-              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 6:00 p.m. – 10:00 p.m.</p>
+              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 6:30 p.m. – 10:00 p.m.</p>
             </div>
           </div>
 
@@ -540,7 +540,7 @@
           <!-- Saturday Event Details -->
           <div>
             <label class="block text-xs font-medium text-slate-300 mb-1">Saturday Event (July 10, 2027)</label>
-            <input type="text" id="inputSatVenue" value="Bob Crane Comm. Ctr, 3600 Tremont Rd (6:00–10:00 p.m.)" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+            <input type="text" id="inputSatVenue" value="Bob Crane Comm. Ctr, 3600 Tremont Rd (6:30–10:00 p.m.)" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
           </div>
 
         </div>
@@ -573,9 +573,9 @@
     const eventState = {
       school: 'Whetstone High School',
       classYear: 'Class of 1977 — 50th Reunion',
-      friDetails: 'Casual Get-Together • Ohio Brewing (7:30–9:30 PM)',
-      satDetails: 'Saturday Party • Bob Crane Comm. Ctr (6:00–10:00 PM)',
-      startDate: new Date('2027-07-09T19:30:00'),
+      friDetails: 'Casual Get-Together • Ohio Brewing (6:00–10:00 PM)',
+      satDetails: 'Saturday Party • Bob Crane Comm. Ctr (6:30–10:00 PM)',
+      startDate: new Date('2027-07-09T18:00:00'),
       sealIcon: 'fa-graduation-cap',
       theme: 'navyGold'
     };
@@ -906,10 +906,10 @@
 
     function addToCalendar() {
       const title = encodeURIComponent(`50th Reunion: Whetstone High School Class of '77`);
-      const details = encodeURIComponent(`SAVE THE DATES!\n\nJuly 9, 2027 (7:30-9:30 PM): Casual Get-Together @ Ohio Brewing, 421 E 2nd Ave.\n\nJuly 10, 2027 (6:00-10:00 PM): Saturday Party @ Bob Crane Community Center, 3600 Tremont Rd.`);
+      const details = encodeURIComponent(`SAVE THE DATES!\n\nJuly 9, 2027 (6:00-10:00 PM): Casual Get-Together @ Ohio Brewing, 421 E 2nd Ave.\n\nJuly 10, 2027 (6:30-10:00 PM): Saturday Party @ Bob Crane Community Center, 3600 Tremont Rd.`);
       const location = encodeURIComponent(`Columbus, OH`);
 
-      const startIso = "20270709T193000Z";
+      const startIso = "20270709T180000Z";
       const endIso = "20270710T220000Z";
 
       const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
@@ -918,7 +918,7 @@
     }
 
     function copyShareableLink() {
-      const textToCopy = `✨ SAVE THE DATES! ✨\n🎓 50th Whetstone High School Reunion (Class of '77)\n\n🍻 Friday, July 9, 2027 (7:30 - 9:30 p.m.)\nCasual Get-Together @ Ohio Brewing (421 E 2nd Ave)\n\n🎉 Saturday, July 10, 2027 (6:00 - 10:00 p.m.)\nSaturday Party @ Bob Crane Community Center (3600 Tremont Rd)`;
+      const textToCopy = `✨ SAVE THE DATES! ✨\n🎓 50th Whetstone High School Reunion (Class of '77)\n\n🍻 Friday, July 9, 2027 (6:00 - 10:00 p.m.)\nCasual Get-Together @ Ohio Brewing (421 E 2nd Ave)\n\n🎉 Saturday, July 10, 2027 (6:30 - 10:00 p.m.)\nSaturday Party @ Bob Crane Community Center (3600 Tremont Rd)`;
 
       const tempTextArea = document.createElement('textarea');
       tempTextArea.value = textToCopy;

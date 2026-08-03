@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Save the Date - Whetstone High School Class of '77 Reunion</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Cinzel', 'serif'],
+            cursive: ['Cormorant Garamond', 'serif'],
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            navy: {
+              900: '#0a192f',
+              800: '#112240',
+              700: '#1b2a4a',
+              600: '#233554',
+              500: '#2d436a',
+            },
+            gold: {
+              200: '#f9f1d0',
+              300: '#f3e5ab',
+              400: '#e5c158',
+              500: '#d4af37',
+              600: '#c5a028',
+              700: '#b8860b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0a192f;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
+
+    /* Background dynamic patterns */
+    .bg-pattern {
+      background-image: radial-gradient(rgba(212, 175, 55, 0.2) 1.5px, transparent 1.5px);
+      background-size: 24px 24px;
+    }
+
+    /* 3D Envelope Container */
+    .envelope-wrapper {
+      perspective: 1000px;
+      transform-style: preserve-3d;
+    }
+
+    .envelope {
+      position: relative;
+      width: 100%;
+      max-width: 460px;
+      height: 310px;
+      margin: 0 auto;
+      transform-style: preserve-3d;
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Envelope Layers */
+    .envelope-back {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #1b2a4a, #0a192f);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 20px rgba(0,0,0,0.5);
+      z-index: 1;
+    }
+
+    .envelope-inner {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: #0d1e38;
+      border-radius: 8px;
+      z-index: 2;
+      overflow: hidden;
+      background-image: radial-gradient(#d4af37 0.75px, transparent 0.75px);
+      background-size: 12px 12px;
+      opacity: 0.9;
+    }
+
+    /* Flyer inside the envelope */
+    .card-flyer {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      right: 20px;
+      bottom: 15px;
+      background: #ffffff;
+      border-radius: 8px;
+      z-index: 3;
+      transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s, box-shadow 0.5s;
+      transform: translateY(0) scale(0.96);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+
+    /* Envelope Pocket (Front Bottom & Sides) */
+    .envelope-pocket {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .pocket-svg {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 -3px 8px rgba(0, 0, 0, 0.4));
+    }
+
+    /* Top Flap with 3D Flip */
+    .envelope-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 5;
+      transform-origin: top center;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.1s linear 0.4s;
+      transform-style: preserve-3d;
+    }
+
+    .flap-open {
+      transform: rotateX(180deg);
+      z-index: 2 !important;
+    }
+
+    /* Wax Seal Button */
+    .wax-seal {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -20%) scale(1);
+      z-index: 6;
+      transition: transform 0.3s ease, opacity 0.4s ease;
+      cursor: pointer;
+    }
+
+    .wax-seal:hover {
+      transform: translate(-50%, -20%) scale(1.1);
+    }
+
+    /* Card Raised / Extracted View state */
+    .card-extracted {
+      transform: translateY(-130px) scale(1) !important;
+      z-index: 10 !important;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    /* Golden Shimmer animation */
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .gold-shimmer {
+      background: linear-gradient(90deg, #c5a028 0%, #fff2ac 25%, #d4af37 50%, #fff2ac 75%, #b8860b 100%);
+      background-size: 200% auto;
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: shimmer 4s linear infinite;
+    }
+
+    /* Custom Toast Notification */
+    .toast-enter {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    .toast-show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 font-sans bg-pattern flex flex-col justify-between relative selection:bg-gold-500 selection:text-navy-900">
+
+  <canvas id="particleCanvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
+
+  <!-- Navigation / Header Bar -->
+  <header class="relative z-20 w-full px-6 py-4 flex items-center justify-between border-b border-gold-500/30 bg-navy-900/80 backdrop-blur-md">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-gold-600 via-gold-400 to-gold-200 flex items-center justify-center text-navy-900 font-serif font-bold text-sm shadow-lg shadow-gold-500/20">
+        <i class="fa-solid fa-graduation-cap text-xs"></i>
+      </div>
+      <span class="font-serif tracking-widest text-sm sm:text-base font-semibold gold-shimmer">WHETSTONE '77</span>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Mute / Unmute Sound Toggle -->
+      <button id="soundToggle" class="px-3 py-1.5 text-xs rounded-full border border-gold-500/40 bg-navy-800/80 hover:bg-navy-700 text-gold-300 transition-all flex items-center gap-2" title="Toggle Sound">
+        <i id="soundIcon" class="fa-solid fa-volume-xmark"></i>
+        <span class="hidden sm:inline">Audio</span>
+      </button>
+
+      <!-- Customize Side Panel Toggle -->
+      <button id="openCustomizeBtn" class="px-3.5 py-1.5 text-xs font-medium rounded-full bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-navy-900 font-semibold transition-all shadow-md shadow-gold-500/20 flex items-center gap-1.5">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Customize</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Interactive Section -->
+  <main class="relative z-10 flex-1 flex flex-col items-center justify-center p-4 sm:p-8 my-auto">
+    
+    <!-- Instruction Banner -->
+    <div id="instructionBanner" class="text-center mb-8 transition-all duration-500 transform translate-y-0 opacity-100">
+      <span class="inline-block px-3.5 py-1 rounded-full text-xs font-semibold uppercase tracking-widest text-gold-300 bg-gold-500/10 border border-gold-500/30 mb-3 animate-pulse">
+        50th Class Reunion
+      </span>
+      <h1 class="text-2xl sm:text-4xl font-serif tracking-wide text-white font-normal">
+        Whetstone High School Class of '77
+      </h1>
+      <p class="text-xs sm:text-sm text-slate-300 mt-2 font-light">
+        Click on the seal or envelope below to open your Save the Date flyer
+      </p>
+    </div>
+
+    <!-- Interactive Envelope Container -->
+    <div class="envelope-wrapper w-full my-4 flex justify-center items-center">
+      <div id="mainEnvelope" class="envelope cursor-pointer group" onclick="toggleEnvelope()">
+        
+        <!-- Envelope Back -->
+        <div class="envelope-back" id="envBack"></div>
+        
+        <!-- Envelope Inner Pattern Surface -->
+        <div class="envelope-inner" id="envInner"></div>
+
+        <!-- Save the Date Flyer Card inside envelope -->
+        <div id="flyerCard" class="card-flyer p-4 sm:p-5 flex flex-col justify-between text-navy-900 text-center select-none overflow-hidden relative border-2 border-gold-500/60">
+          
+          <!-- Inner Decorative Gold Border -->
+          <div class="absolute inset-2 border border-gold-600/40 rounded pointer-events-none"></div>
+          <div class="absolute inset-3 border border-gold-600/20 rounded pointer-events-none"></div>
+
+          <!-- Top Decorative Heading -->
+          <div class="pt-1">
+            <p class="font-serif text-[11px] sm:text-xs tracking-[0.25em] uppercase text-gold-700 font-bold">
+              SAVE THE DATES!
+            </p>
+            <p class="text-[10px] text-navy-700 font-serif uppercase tracking-wider mt-0.5 font-semibold">
+              50th Class Reunion
+            </p>
+          </div>
+
+          <!-- Main Reunion Title -->
+          <div class="my-auto py-1">
+            <h2 id="cardTitle" class="font-serif text-xl sm:text-2xl text-navy-900 font-bold tracking-tight">
+              Whetstone High School
+            </h2>
+            <div class="my-0.5 text-gold-700 font-serif text-xs font-bold tracking-widest uppercase">Class of 1977</div>
+          </div>
+
+          <!-- Events Preview inside envelope flyer -->
+          <div class="pb-1 text-left space-y-1 px-1">
+            <div class="bg-navy-900/5 p-1.5 rounded border border-gold-500/30 text-[10px]">
+              <span class="font-bold text-navy-900 block font-serif">FRIDAY, JULY 9, 2027</span>
+              <span id="cardFridayText" class="text-navy-800 block truncate font-medium">Casual Get-Together • Ohio Brewing (6:00–9:30 PM)</span>
+            </div>
+            <div class="bg-navy-900/5 p-1.5 rounded border border-gold-500/30 text-[10px]">
+              <span class="font-bold text-navy-900 block font-serif">SATURDAY, JULY 10, 2027</span>
+              <span id="cardSaturdayText" class="text-navy-800 block truncate font-medium">Saturday Party • Bob Crane Comm. Ctr (6:00–10:00 PM)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Pocket Front Dynamic Shapes -->
+        <div class="envelope-pocket">
+          <svg class="pocket-svg" viewBox="0 0 460 310" preserveAspectRatio="none">
+            <!-- Left Flap -->
+            <path id="svgPocketLeft" d="M 0,0 L 220,160 L 0,310 Z" fill="#1b2a4a" opacity="0.96"/>
+            <!-- Right Flap -->
+            <path id="svgPocketRight" d="M 460,0 L 240,160 L 460,310 Z" fill="#1b2a4a" opacity="0.98"/>
+            <!-- Bottom Fold -->
+            <path id="svgPocketBottom" d="M 0,310 L 230,140 L 460,310 Z" fill="#0a192f"/>
+          </svg>
+        </div>
+
+        <!-- Top Envelope Triangular Flap -->
+        <div id="envelopeFlap" class="envelope-flap">
+          <svg class="w-full h-full drop-shadow-lg" viewBox="0 0 460 310" preserveAspectRatio="none">
+            <path id="svgTopFlap" d="M 0,0 L 230,175 L 460,0 Z" fill="#112240"/>
+          </svg>
+        </div>
+
+        <!-- Wax Seal Button -->
+        <div id="waxSeal" class="wax-seal group-hover:scale-110 transition-transform">
+          <div class="relative w-16 h-16 rounded-full bg-gradient-to-br from-gold-400 via-gold-500 to-gold-700 flex items-center justify-center shadow-2xl border-2 border-amber-200/60">
+            <div class="absolute inset-0 rounded-full border-4 border-navy-900/20 border-dashed"></div>
+            <div class="w-12 h-12 rounded-full border border-gold-200/50 flex items-center justify-center bg-navy-900/90 shadow-inner">
+              <i id="sealIcon" class="fa-solid fa-graduation-cap text-gold-300 text-lg"></i>
+            </div>
+          </div>
+          <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 whitespace-nowrap text-[11px] font-serif tracking-widest text-gold-300 font-semibold uppercase opacity-90 group-hover:opacity-100 transition-opacity">
+            Click to Open
+          </span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Action Bar Buttons -->
+    <div id="actionControls" class="mt-8 flex flex-wrap items-center justify-center gap-3 opacity-0 pointer-events-none transition-all duration-700 transform translate-y-4">
+      <button onclick="viewFullFlyerModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-gold-500 to-gold-400 hover:from-gold-400 hover:to-gold-300 text-navy-900 font-semibold text-xs sm:text-sm tracking-wide shadow-lg shadow-gold-500/25 flex items-center gap-2 transform hover:-translate-y-0.5 transition-all">
+        <i class="fa-solid fa-expand"></i>
+        <span>Expand Flyer</span>
+      </button>
+
+      <button onclick="addToCalendar()" class="px-5 py-2.5 rounded-full bg-navy-800 hover:bg-navy-700 text-white border border-gold-500/40 font-medium text-xs sm:text-sm tracking-wide shadow-md flex items-center gap-2 transform hover:-translate-y-0.5 transition-all">
+        <i class="fa-regular fa-calendar-plus text-gold-400"></i>
+        <span>Add to Calendar</span>
+      </button>
+
+      <button onclick="copyShareableLink()" class="px-5 py-2.5 rounded-full bg-navy-800 hover:bg-navy-700 text-white border border-gold-500/40 font-medium text-xs sm:text-sm tracking-wide shadow-md flex items-center gap-2 transform hover:-translate-y-0.5 transition-all">
+        <i class="fa-regular fa-copy text-gold-400"></i>
+        <span>Copy Details</span>
+      </button>
+
+      <button onclick="toggleEnvelope()" class="px-4 py-2.5 rounded-full bg-navy-800/80 hover:bg-navy-700/80 text-slate-300 border border-slate-700/60 font-medium text-xs tracking-wide shadow-md flex items-center gap-2 transition-all">
+        <i class="fa-solid fa-arrow-rotate-left"></i>
+        <span>Close Envelope</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- Bottom Event Countdown Footer -->
+  <footer class="relative z-20 w-full py-4 px-6 border-t border-gold-500/30 bg-navy-900/90 backdrop-blur-md">
+    <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <p class="text-xs uppercase tracking-widest text-gold-400 font-serif font-semibold">Countdown to Reunion Weekend</p>
+        <p id="countdownTargetText" class="text-xs text-slate-300 mt-0.5">July 9, 2027</p>
+      </div>
+
+      <div class="flex items-center gap-4 text-center">
+        <div class="px-3 py-1.5 rounded-lg bg-navy-800 border border-gold-500/40 min-w-[55px]">
+          <span id="countDays" class="block text-lg font-serif font-bold text-gold-300">00</span>
+          <span class="text-[9px] uppercase tracking-wider text-slate-300">Days</span>
+        </div>
+        <span class="text-gold-400 font-bold">:</span>
+        <div class="px-3 py-1.5 rounded-lg bg-navy-800 border border-gold-500/40 min-w-[55px]">
+          <span id="countHours" class="block text-lg font-serif font-bold text-gold-300">00</span>
+          <span class="text-[9px] uppercase tracking-wider text-slate-300">Hours</span>
+        </div>
+        <span class="text-gold-400 font-bold">:</span>
+        <div class="px-3 py-1.5 rounded-lg bg-navy-800 border border-gold-500/40 min-w-[55px]">
+          <span id="countMins" class="block text-lg font-serif font-bold text-gold-300">00</span>
+          <span class="text-[9px] uppercase tracking-wider text-slate-300">Mins</span>
+        </div>
+        <span class="text-gold-400 font-bold">:</span>
+        <div class="px-3 py-1.5 rounded-lg bg-navy-800 border border-gold-500/40 min-w-[55px]">
+          <span id="countSecs" class="block text-lg font-serif font-bold text-gold-300">00</span>
+          <span class="text-[9px] uppercase tracking-wider text-slate-300">Secs</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Full Flyer Zoom Modal -->
+  <div id="flyerModal" class="fixed inset-0 z-50 bg-navy-950/85 backdrop-blur-lg flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="relative w-full max-w-xl bg-navy-900 border border-gold-500/40 rounded-2xl shadow-2xl overflow-hidden p-6 sm:p-8 flex flex-col items-center max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button onclick="closeFullFlyerModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-navy-800 text-slate-300 hover:text-white hover:bg-navy-700 flex items-center justify-center transition-all z-10 border border-gold-500/30">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+
+      <!-- Expanded Card Canvas Design -->
+      <div id="expandedCardView" class="w-full max-w-md bg-white text-navy-900 rounded-xl p-6 sm:p-8 shadow-2xl relative border-2 border-gold-500 my-2">
+        <div class="absolute inset-3 border border-gold-600/30 rounded pointer-events-none"></div>
+        
+        <div class="text-center space-y-4">
+          <div>
+            <p class="font-serif text-xs tracking-[0.35em] uppercase text-gold-700 font-bold">
+              SAVE THE DATES!
+            </p>
+            <p class="text-xs text-navy-800 font-serif uppercase tracking-widest mt-1 font-semibold">
+              Celebrating 50 Years
+            </p>
+          </div>
+          
+          <div class="w-16 h-0.5 bg-gold-500 mx-auto"></div>
+
+          <div>
+            <h2 id="modalTitle" class="font-serif text-2xl sm:text-3xl text-navy-900 font-bold tracking-tight">
+              Whetstone High School
+            </h2>
+            <p class="font-serif text-lg text-gold-700 font-bold mt-1">
+              Class of 1977 — 50th Reunion
+            </p>
+          </div>
+
+          <!-- Schedule of Events -->
+          <div class="space-y-3 pt-2 text-left">
+            <!-- Event 1: Friday -->
+            <div class="p-3.5 bg-navy-900/5 rounded-lg border border-gold-500/40 shadow-sm">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-gold-500"></span>
+                <span class="font-serif text-xs font-bold uppercase tracking-wider text-gold-700">Friday, July 9, 2027</span>
+              </div>
+              <h3 class="font-serif text-sm font-bold text-navy-900">Casual Get-Together</h3>
+              <p class="text-xs text-navy-800 mt-0.5 font-medium"><i class="fa-solid fa-location-dot text-gold-600 mr-1"></i> Ohio Brewing • 421 E 2nd Ave</p>
+              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 7:30 p.m. – 9:30 p.m.</p>
+            </div>
+
+            <!-- Event 2: Saturday -->
+            <div class="p-3.5 bg-navy-900/5 rounded-lg border border-gold-500/40 shadow-sm">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="w-2.5 h-2.5 rounded-full bg-gold-500"></span>
+                <span class="font-serif text-xs font-bold uppercase tracking-wider text-gold-700">Saturday, July 10, 2027</span>
+              </div>
+              <h3 class="font-serif text-sm font-bold text-navy-900">Saturday Party</h3>
+              <p class="text-xs text-navy-800 mt-0.5 font-medium"><i class="fa-solid fa-location-dot text-gold-600 mr-1"></i> Bob Crane Community Center • 3600 Tremont Rd</p>
+              <p class="text-xs text-navy-700 mt-0.5 font-medium"><i class="fa-regular fa-clock text-gold-600 mr-1"></i> 6:00 p.m. – 10:00 p.m.</p>
+            </div>
+          </div>
+
+          <div class="pt-2">
+            <span class="text-[10px] uppercase tracking-widest text-gold-700 font-serif font-bold border-b border-gold-500/40 pb-0.5">
+              More Information & Details To Follow
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons in modal -->
+      <div class="mt-6 flex flex-wrap justify-center gap-3 w-full">
+        <button onclick="addToCalendar()" class="px-5 py-2 rounded-lg bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold text-xs tracking-wider uppercase transition-all shadow">
+          <i class="fa-regular fa-calendar-check mr-1.5"></i> Add to Calendar
+        </button>
+        <button onclick="copyShareableLink()" class="px-5 py-2 rounded-lg bg-navy-800 hover:bg-navy-700 text-white border border-gold-500/40 font-medium text-xs tracking-wider uppercase transition-all">
+          <i class="fa-regular fa-copy mr-1.5"></i> Copy Details
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Customization Side Drawer -->
+  <div id="customizeDrawer" class="fixed inset-0 z-50 bg-navy-950/70 backdrop-blur-sm opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="drawerContent" class="absolute top-0 right-0 h-full w-full max-w-md bg-navy-900 border-l border-gold-500/30 shadow-2xl p-6 overflow-y-auto transform translate-x-full transition-transform duration-300 flex flex-col justify-between">
+      
+      <div>
+        <!-- Drawer Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-navy-700">
+          <div class="flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-gold-400"></i>
+            <h3 class="font-serif text-lg text-white font-semibold">Customize Event</h3>
+          </div>
+          <button onclick="closeCustomizeDrawer()" class="text-slate-400 hover:text-white p-1">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Customization Form Controls -->
+        <div class="space-y-4 my-6">
+          
+          <!-- Theme Selection -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-gold-300 mb-2">Color Palette</label>
+            <div class="grid grid-cols-4 gap-2">
+              <button onclick="setTheme('navyGold')" class="h-10 rounded-lg border-2 border-gold-400 bg-navy-900 flex items-center justify-center p-1" title="Navy & Gold">
+                <span class="w-full h-full rounded bg-gradient-to-r from-navy-700 via-white to-gold-500"></span>
+              </button>
+              <button onclick="setTheme('classicGold')" class="h-10 rounded-lg border border-slate-700 hover:border-gold-400 bg-navy-900 flex items-center justify-center p-1" title="Classic Midnight Gold">
+                <span class="w-full h-full rounded bg-gradient-to-r from-amber-600 to-slate-900"></span>
+              </button>
+              <button onclick="setTheme('royal')" class="h-10 rounded-lg border border-slate-700 hover:border-indigo-400 bg-navy-900 flex items-center justify-center p-1" title="Royal Blue">
+                <span class="w-full h-full rounded bg-gradient-to-r from-indigo-600 to-slate-900"></span>
+              </button>
+              <button onclick="setTheme('emerald')" class="h-10 rounded-lg border border-slate-700 hover:border-emerald-400 bg-navy-900 flex items-center justify-center p-1" title="Botanical Sage">
+                <span class="w-full h-full rounded bg-gradient-to-r from-emerald-600 to-slate-900"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Wax Seal Emblem -->
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-wider text-gold-300 mb-2">Wax Seal Stamp</label>
+            <div class="flex gap-2">
+              <button onclick="setSealIcon('fa-graduation-cap')" class="flex-1 py-2 rounded-lg bg-navy-800 border border-gold-500/40 hover:border-gold-400 text-gold-300 text-sm">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </button>
+              <button onclick="setSealIcon('fa-glass-cheers')" class="flex-1 py-2 rounded-lg bg-navy-800 border border-gold-500/40 hover:border-gold-400 text-gold-300 text-sm">
+                <i class="fa-solid fa-glass-cheers"></i>
+              </button>
+              <button onclick="setSealIcon('fa-award')" class="flex-1 py-2 rounded-lg bg-navy-800 border border-gold-500/40 hover:border-gold-400 text-gold-300 text-sm">
+                <i class="fa-solid fa-award"></i>
+              </button>
+              <button onclick="setSealIcon('fa-heart')" class="flex-1 py-2 rounded-lg bg-navy-800 border border-gold-500/40 hover:border-gold-400 text-gold-300 text-sm">
+                <i class="fa-solid fa-heart"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- School / Event Title -->
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Organization / School</label>
+            <input type="text" id="inputSchool" value="Whetstone High School" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+          </div>
+
+          <!-- Class Year / Subtitle -->
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Class / Reunion Subtitle</label>
+            <input type="text" id="inputClassYear" value="Class of 1977 — 50th Reunion" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+          </div>
+
+          <!-- Friday Event Details -->
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Friday Event (July 9, 2027)</label>
+            <input type="text" id="inputFriVenue" value="Ohio Brewing, 421 E 2nd Ave (6:00–10:00 p.m.)" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+          </div>
+
+          <!-- Saturday Event Details -->
+          <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Saturday Event (July 10, 2027)</label>
+            <input type="text" id="inputSatVenue" value="Bob Crane Comm. Ctr, 3600 Tremont Rd (6:00–10:00 p.m.)" oninput="updateDetails()" class="w-full px-3 py-2 rounded-lg bg-navy-800 border border-gold-500/30 text-white text-sm focus:outline-none focus:border-gold-400">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Apply & Close Button -->
+      <div class="pt-4 border-t border-navy-700">
+        <button onclick="closeCustomizeDrawer()" class="w-full py-2.5 rounded-xl bg-gold-500 hover:bg-gold-400 text-navy-900 font-bold text-sm transition-all shadow-lg shadow-gold-500/20">
+          Done Customizing
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Popup -->
+  <div id="toast" class="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full bg-gold-500 text-navy-900 font-bold text-xs sm:text-sm shadow-xl flex items-center gap-2 pointer-events-none transition-all duration-300 toast-enter">
+    <i id="toastIcon" class="fa-solid fa-circle-check"></i>
+    <span id="toastMsg">Details copied to clipboard!</span>
+  </div>
+
+  <!-- Application Logic & Animations -->
+  <script>
+    let isOpen = false;
+    let audioEnabled = false;
+    let audioCtx = null;
+    let countdownInterval = null;
+
+    // Event Details State
+    const eventState = {
+      school: 'Whetstone High School',
+      classYear: 'Class of 1977 — 50th Reunion',
+      friDetails: 'Casual Get-Together • Ohio Brewing (7:30–9:30 PM)',
+      satDetails: 'Saturday Party • Bob Crane Comm. Ctr (6:00–10:00 PM)',
+      startDate: new Date('2027-07-09T19:30:00'),
+      sealIcon: 'fa-graduation-cap',
+      theme: 'navyGold'
+    };
+
+    /* Color Theme Palettes */
+    const themes = {
+      navyGold: {
+        envelopeBack: 'linear-gradient(135deg, #1b2a4a, #0a192f)',
+        innerBg: '#0d1e38',
+        flap: '#112240',
+        pocketLeft: '#1b2a4a',
+        pocketRight: '#1b2a4a',
+        pocketBottom: '#0a192f',
+      },
+      classicGold: {
+        envelopeBack: 'linear-gradient(135deg, #1e293b, #0f172a)',
+        innerBg: '#2a1b28',
+        flap: '#334155',
+        pocketLeft: '#1e293b',
+        pocketRight: '#1e293b',
+        pocketBottom: '#0f172a',
+      },
+      royal: {
+        envelopeBack: 'linear-gradient(135deg, #1e1b4b, #0f172a)',
+        innerBg: '#1e293b',
+        flap: '#3730a3',
+        pocketLeft: '#1e1b4b',
+        pocketRight: '#1e1b4b',
+        pocketBottom: '#0f172a',
+      },
+      emerald: {
+        envelopeBack: 'linear-gradient(135deg, #064e3b, #022c22)',
+        innerBg: '#06382b',
+        flap: '#047857',
+        pocketLeft: '#064e3b',
+        pocketRight: '#064e3b',
+        pocketBottom: '#022c22',
+      }
+    };
+
+    function toggleEnvelope() {
+      const flap = document.getElementById('envelopeFlap');
+      const card = document.getElementById('flyerCard');
+      const seal = document.getElementById('waxSeal');
+      const instructions = document.getElementById('instructionBanner');
+      const actionControls = document.getElementById('actionControls');
+
+      isOpen = !isOpen;
+
+      if (isOpen) {
+        // Open Envelope Sequence
+        flap.classList.add('flap-open');
+        seal.style.opacity = '0';
+        seal.style.pointerEvents = 'none';
+
+        // Play sound effect
+        playEnvelopeSound();
+
+        // Reveal Confetti Burst
+        spawnConfettiBurst();
+
+        // Slide out flyer after flap flip
+        setTimeout(() => {
+          card.classList.add('card-extracted');
+          instructions.style.opacity = '0.3';
+          actionControls.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+          actionControls.classList.add('opacity-100', 'translate-y-0');
+        }, 400);
+
+      } else {
+        // Close Envelope Sequence
+        card.classList.remove('card-extracted');
+        actionControls.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+        actionControls.classList.remove('opacity-100', 'translate-y-0');
+
+        setTimeout(() => {
+          flap.classList.remove('flap-open');
+          seal.style.opacity = '1';
+          seal.style.pointerEvents = 'auto';
+          instructions.style.opacity = '1';
+        }, 500);
+      }
+    }
+
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+      }
+    }
+
+    document.getElementById('soundToggle').addEventListener('click', (e) => {
+      e.stopPropagation();
+      initAudio();
+      audioEnabled = !audioEnabled;
+      const icon = document.getElementById('soundIcon');
+      if (audioEnabled) {
+        icon.className = 'fa-solid fa-volume-high text-amber-400';
+        showToast('Audio Effects Enabled', 'fa-volume-high');
+        playEnvelopeSound();
+      } else {
+        icon.className = 'fa-solid fa-volume-xmark';
+        showToast('Audio Effects Muted', 'fa-volume-xmark');
+      }
+    });
+
+    function playEnvelopeSound() {
+      if (!audioEnabled) return;
+      initAudio();
+      
+      try {
+        const now = audioCtx.currentTime;
+        const freqs = [329.63, 440.00, 554.37, 659.25, 880.00];
+        freqs.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.08);
+
+          gain.gain.setValueAtTime(0, now + idx * 0.08);
+          gain.gain.linearRampToValueAtTime(0.08, now + idx * 0.08 + 0.04);
+          gain.gain.exponentialRampToValueAtTime(0.0001, now + idx * 0.08 + 0.6);
+
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+
+          osc.start(now + idx * 0.08);
+          osc.stop(now + idx * 0.08 + 0.7);
+        });
+      } catch(err) {
+        console.log('Audio requires user activation');
+      }
+    }
+
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, isBurst = false) {
+        this.x = x || Math.random() * canvas.width;
+        this.y = y || (isBurst ? canvas.height / 2 : canvas.height + 10);
+        this.size = Math.random() * 5 + 2;
+        this.speedY = isBurst ? (Math.random() - 0.7) * 8 : -Math.random() * 1.5 - 0.5;
+        this.speedX = isBurst ? (Math.random() - 0.5) * 8 : (Math.random() - 0.5) * 0.8;
+        this.color = ['#f3e5ab', '#d4af37', '#ffffff', '#e5c158', '#93c5fd'][Math.floor(Math.random() * 5)];
+        this.opacity = Math.random() * 0.8 + 0.2;
+        this.rotation = Math.random() * 360;
+        this.rotSpeed = (Math.random() - 0.5) * 4;
+        this.isBurst = isBurst;
+        this.gravity = isBurst ? 0.15 : 0;
+      }
+
+      update() {
+        this.y += this.speedY;
+        this.x += this.speedX;
+        this.rotation += this.rotSpeed;
+
+        if (this.isBurst) {
+          this.speedY += this.gravity;
+          this.opacity -= 0.012;
+        } else {
+          if (this.y < -20) {
+            this.y = canvas.height + 10;
+            this.x = Math.random() * canvas.width;
+          }
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate((this.rotation * Math.PI) / 180);
+        ctx.globalAlpha = Math.max(0, this.opacity);
+        ctx.fillStyle = this.color;
+
+        ctx.beginPath();
+        ctx.moveTo(0, -this.size);
+        ctx.quadraticCurveTo(this.size, 0, 0, this.size);
+        ctx.quadraticCurveTo(-this.size, 0, 0, -this.size);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // Populate particles
+    for (let i = 0; i < 35; i++) {
+      particles.push(new Particle());
+    }
+
+    function spawnConfettiBurst() {
+      const envRect = document.getElementById('mainEnvelope').getBoundingClientRect();
+      const centerX = envRect.left + envRect.width / 2;
+      const centerY = envRect.top + envRect.height / 2;
+
+      for (let i = 0; i < 60; i++) {
+        particles.push(new Particle(centerX, centerY, true));
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        
+        if (particles[i].isBurst && particles[i].opacity <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    function updateDetails() {
+      const schoolInput = document.getElementById('inputSchool');
+      if (schoolInput) eventState.school = schoolInput.value || 'Whetstone High School';
+      
+      const classInput = document.getElementById('inputClassYear');
+      if (classInput) eventState.classYear = classInput.value || 'Class of 1977 — 50th Reunion';
+
+      const friInput = document.getElementById('inputFriVenue');
+      if (friInput) eventState.friDetails = friInput.value || 'Ohio Brewing, 421 E 2nd Ave (6:00–10:00 p.m.)';
+
+      const satInput = document.getElementById('inputSatVenue');
+      if (satInput) eventState.satDetails = satInput.value || 'Bob Crane Comm. Ctr, 3600 Tremont Rd (6:00–10:00 p.m.)';
+
+      const cardTitle = document.getElementById('cardTitle');
+      if (cardTitle) cardTitle.textContent = eventState.school;
+      
+      const cardFriday = document.getElementById('cardFridayText');
+      if (cardFriday) cardFriday.textContent = eventState.friDetails;
+
+      const cardSat = document.getElementById('cardSaturdayText');
+      if (cardSat) cardSat.textContent = eventState.satDetails;
+
+      const modalTitle = document.getElementById('modalTitle');
+      if (modalTitle) modalTitle.textContent = eventState.school;
+
+      updateCountdown();
+    }
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const target = eventState.startDate.getTime();
+      const diff = target - now;
+
+      if (diff <= 0) {
+        document.getElementById('countDays').textContent = '00';
+        document.getElementById('countHours').textContent = '00';
+        document.getElementById('countMins').textContent = '00';
+        document.getElementById('countSecs').textContent = '00';
+        return;
+      }
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById('countDays').textContent = days.toString().padStart(2, '0');
+      document.getElementById('countHours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('countMins').textContent = mins.toString().padStart(2, '0');
+      document.getElementById('countSecs').textContent = secs.toString().padStart(2, '0');
+    }
+
+    if (countdownInterval) clearInterval(countdownInterval);
+    countdownInterval = setInterval(updateCountdown, 1000);
+
+    function setTheme(themeKey) {
+      const palette = themes[themeKey];
+      if (!palette) return;
+
+      document.getElementById('envBack').style.background = palette.envelopeBack;
+      document.getElementById('envInner').style.backgroundColor = palette.innerBg;
+      document.getElementById('svgTopFlap').setAttribute('fill', palette.flap);
+      document.getElementById('svgPocketLeft').setAttribute('fill', palette.pocketLeft);
+      document.getElementById('svgPocketRight').setAttribute('fill', palette.pocketRight);
+      document.getElementById('svgPocketBottom').setAttribute('fill', palette.pocketBottom);
+
+      showToast(`Applied Theme: ${themeKey.toUpperCase()}`, 'fa-palette');
+    }
+
+    function setSealIcon(iconClass) {
+      const sealIcon = document.getElementById('sealIcon');
+      sealIcon.className = `fa-solid ${iconClass} text-amber-200 text-lg`;
+      showToast('Wax Seal Updated', 'fa-stamp');
+    }
+
+    function viewFullFlyerModal() {
+      const modal = document.getElementById('flyerModal');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      modal.classList.add('opacity-100');
+    }
+
+    function closeFullFlyerModal() {
+      const modal = document.getElementById('flyerModal');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      modal.classList.remove('opacity-100');
+    }
+
+    document.getElementById('openCustomizeBtn').addEventListener('click', () => {
+      const drawer = document.getElementById('customizeDrawer');
+      const content = document.getElementById('drawerContent');
+      drawer.classList.remove('opacity-0', 'pointer-events-none');
+      drawer.classList.add('opacity-100');
+      content.classList.remove('translate-x-full');
+    });
+
+    function closeCustomizeDrawer() {
+      const drawer = document.getElementById('customizeDrawer');
+      const content = document.getElementById('drawerContent');
+      content.classList.add('translate-x-full');
+      setTimeout(() => {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+        drawer.classList.remove('opacity-100');
+      }, 200);
+    }
+
+    function addToCalendar() {
+      const title = encodeURIComponent(`50th Reunion: Whetstone High School Class of '77`);
+      const details = encodeURIComponent(`SAVE THE DATES!\n\nJuly 9, 2027 (7:30-9:30 PM): Casual Get-Together @ Ohio Brewing, 421 E 2nd Ave.\n\nJuly 10, 2027 (6:00-10:00 PM): Saturday Party @ Bob Crane Community Center, 3600 Tremont Rd.`);
+      const location = encodeURIComponent(`Columbus, OH`);
+
+      const startIso = "20270709T193000Z";
+      const endIso = "20270710T220000Z";
+
+      const gcalUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startIso}/${endIso}&details=${details}&location=${location}`;
+      window.open(gcalUrl, '_blank');
+      showToast('Opening Calendar...', 'fa-calendar-plus');
+    }
+
+    function copyShareableLink() {
+      const textToCopy = `✨ SAVE THE DATES! ✨\n🎓 50th Whetstone High School Reunion (Class of '77)\n\n🍻 Friday, July 9, 2027 (7:30 - 9:30 p.m.)\nCasual Get-Together @ Ohio Brewing (421 E 2nd Ave)\n\n🎉 Saturday, July 10, 2027 (6:00 - 10:00 p.m.)\nSaturday Party @ Bob Crane Community Center (3600 Tremont Rd)`;
+
+      const tempTextArea = document.createElement('textarea');
+      tempTextArea.value = textToCopy;
+      document.body.appendChild(tempTextArea);
+      tempTextArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempTextArea);
+
+      showToast('Reunion Details Copied to Clipboard!', 'fa-copy');
+    }
+
+    function showToast(msg, icon = 'fa-circle-check') {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      const toastIcon = document.getElementById('toastIcon');
+
+      toastMsg.textContent = msg;
+      toastIcon.className = `fa-solid ${icon}`;
+
+      toast.classList.remove('toast-enter');
+      toast.classList.add('toast-show');
+
+      setTimeout(() => {
+        toast.classList.remove('toast-show');
+        toast.classList.add('toast-enter');
+      }, 2500);
+    }
+
+    window.onload = function() {
+      updateDetails();
+    };
+  </script>
+</body>
+</html>
